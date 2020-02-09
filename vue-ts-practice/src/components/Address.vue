@@ -1,12 +1,12 @@
 <template>
   <div>
     <p>郵便番号</p>
-    <input type="text" id="js-zipcode" :value="defaultZip" />
-    <button @click="onClick">適用</button>
+    <input type="text" v-model="inputZipCode" />
+    <button @click="onClick()">{{inputZipCode}}</button>
     <p>都道府県</p>
-    <input type="text" id="js-pref" value="※郵便番号入力で自動反映されます" />
+    <input type="text" :value="inputPref" />
     <p>住所</p>
-    <input type="text" id="js-address" value="※郵便番号入力で自動反映されます" />
+    <input type="text" :value="inputAddress" />
   </div>
 </template>
 
@@ -16,10 +16,17 @@
     @Component
     export default class MyButton extends Vue {
 
-        @Prop()
-        public defaultZip?: string;
+      // @propで、親コンポーネントから取得
+      @Prop()
+      public defaultZip?: string;
+
+      // 通常のvueでいうdata
+      inputZipCode: any = this.defaultZip;
+      inputPref: string = "※郵便番号入力で自動反映されます";
+      inputAddress: string = "※郵便番号入力で自動反映されます";
 
       public onClick(){
+        alert(this.inputZipCode);
         function createCORSRequest(method: string, url: string) {
           let xhr = new XMLHttpRequest();
             if ("withCredentials" in xhr) {
@@ -35,22 +42,22 @@
             return xhr;
         }
 
-        const inputZipCode:HTMLInputElement = <HTMLInputElement>document.getElementById("js-zipcode");
-        const inputPref:HTMLInputElement = <HTMLInputElement>document.getElementById("js-pref");
-        const inputAddress:HTMLInputElement = <HTMLInputElement>document.getElementById("js-address");
-        const xhr = createCORSRequest('GET', 'https://api.zipaddress.net/?zipcode=' + inputZipCode.value);
+        const _this = this;
+        const xhr = createCORSRequest('GET', 'https://api.zipaddress.net/?zipcode=' + this.inputZipCode);
         if (!xhr) {
             throw new Error('CORS not supported');
         }
         xhr.onload = function(){
           const responseArr = JSON.parse(xhr.response);
-          inputPref.value = responseArr.data.pref;
-          inputAddress.value = responseArr.data.address;
+          _this.inputPref = responseArr.data.pref;
+          _this.inputAddress = responseArr.data.address;
+        alert('ssss');
         };
         xhr.onerror = function(error){
           console.log(error);
         };
         xhr.send();
       }
+
     }
 </script>
