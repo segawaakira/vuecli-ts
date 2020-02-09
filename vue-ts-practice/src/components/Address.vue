@@ -26,7 +26,6 @@
       inputAddress: string = "※郵便番号入力で自動反映されます";
 
       public onClick(){
-        alert(this.inputZipCode);
         function createCORSRequest(method: string, url: string) {
           let xhr = new XMLHttpRequest();
             if ("withCredentials" in xhr) {
@@ -51,7 +50,6 @@
           const responseArr = JSON.parse(xhr.response);
           _this.inputPref = responseArr.data.pref;
           _this.inputAddress = responseArr.data.address;
-        alert('ssss');
         };
         xhr.onerror = function(error){
           console.log(error);
